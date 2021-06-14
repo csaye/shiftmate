@@ -1,6 +1,14 @@
 import Head from 'next/head';
 
+import firebase from 'firebase/app';
+import { firebaseConfig } from '/util/firebaseConfig.js';
+
 import '../styles/globals.css';
+
+// initialize firebase
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
 
 function MyApp({ Component, pageProps }) {
   return (
