@@ -1,9 +1,12 @@
+import React, { useEffect, useState } from 'react';
 import Calendar from '../Calendar/Calendar.js';
+import SignIn from '../SignIn/SignIn.js';
 
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
 import { firebaseConfig } from '../../util/firebaseConfig.js';
+import { useAuthState } from 'react-firebase-hooks/auth';
 
 import './App.css';
 
@@ -13,9 +16,31 @@ if (!firebase.apps.length) {
 }
 
 function App() {
+  const [loaded, setLoaded] = useState(false);
+
+  useAuthState(firebase.auth());
+
+  // set loaded after auth initialization
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged(() => setLoaded(true));
+  }, []);
+
+  // if auth not loaded, return
+  if (!loaded) {
+    return (
+      <div className="App">
+        <h1>Loading auth...</h1>
+      </div>
+    );
+  }
+
   return (
     <div className="App">
-      <Calendar />
+      {
+        firebase.auth().currentUser ?
+        <Calendar /> :
+        <SignIn />
+      }
     </div>
   );
 }
