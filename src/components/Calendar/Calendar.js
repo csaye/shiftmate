@@ -11,6 +11,7 @@ function Calendar() {
   // creates and appends new event
   function createEvent(start, end) {
     const newEvent = {
+      id: Date.now().toString(),
       start: start.getTime(),
       end: end.getTime(),
       title: 'Event'
@@ -30,6 +31,11 @@ function Calendar() {
       selectable={true}
       select={selectInfo => {
         createEvent(selectInfo.start, selectInfo.end);
+      }}
+      eventClick={eventInfo => {
+        if (!window.confirm(`Delete ${eventInfo.event.title}?`)) return;
+        const id = eventInfo.event.id;
+        setEvents(oldEvents => oldEvents.filter(e => e.id !== id));
       }}
     />
   );
