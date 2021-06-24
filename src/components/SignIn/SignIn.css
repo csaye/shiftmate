@@ -14,10 +14,36 @@
   border-radius: 20px;
 }
 
+.SignIn img.logo {
+  height: 60px;
+}
+
 .SignIn h1 {
-  margin: 0;
+  margin: 5px 0;
 }
 
 .SignIn button {
-  padding: 10px;
+  padding: 0;
+  background: #bbb;
+  border: 1px solid #777;
+  border-radius: 5px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  transition: 0.25s;
+}
+
+.SignIn button:hover {
+  background: #ccc;
+}
+
+.SignIn button .left-side {
+  background: #fff;
+  height: 100%;
+  display: flex;
+  padding: 5px;
+}
+
+.SignIn button p {
+  margin: 0 10px;
 }
