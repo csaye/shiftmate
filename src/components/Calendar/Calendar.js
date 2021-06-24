@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import Modal from 'react-modal';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 import firebase from 'firebase/app';
 import timeGridPlugin from '@fullcalendar/timegrid';
@@ -87,7 +88,9 @@ function Calendar() {
             left: '50%',
             top: '50%',
             transform: 'translate(-50%, -50%)',
-            width: '400px'
+            width: 'fit-content',
+            height: 'fit-content',
+            textAlign: 'center'
           },
           overlay: {
             zIndex: '1'
@@ -95,24 +98,32 @@ function Calendar() {
         }}
       >
         <h1>Editing {editingEvent?.event?.title}</h1>
-        <button onClick={() => deleteEvent(editingEvent)}>Delete</button>
         <form onSubmit={e => {
           e.preventDefault();
           updateEvent(editingEvent);
         }}>
           <input
+            placeholder="event title"
             value={title}
             onChange={e => setTitle(e.target.value)}
             required
           />
-          <button
-            type="button"
-            onClick={() => setEditingEvent(null)}
-          >
-            Cancel
-          </button>
-          <button>Save</button>
+          <div>
+            <button
+              type="button"
+              onClick={() => setEditingEvent(null)}
+            >
+              Cancel
+            </button>
+            <button>Save</button>
+          </div>
         </form>
+        <button
+          className="icon-button"
+          onClick={() => deleteEvent(editingEvent)}
+        >
+          <DeleteIcon />
+        </button>
       </Modal>
     </div>
   );
