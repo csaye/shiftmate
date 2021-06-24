@@ -1,4 +1,6 @@
 .App {
   height: 100%;
+  min-width: 100%;
+  width: fit-content;
   overflow: auto;
 }

@@ -1,4 +1,8 @@
 .Calendar {
+  margin: 20px;
+}
+
+.Calendar .fullcalendar {
   width: 1200px;
-  margin: 20px auto;
+  margin: 0 auto;
 }

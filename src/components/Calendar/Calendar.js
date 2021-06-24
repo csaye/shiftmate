@@ -56,22 +56,24 @@ function Calendar() {
 
   return (
     <div className="Calendar">
-      <FullCalendar
-        height="auto"
-        events={eventsData}
-        plugins={[timeGridPlugin, interactionPlugin]}
-        allDaySlot={false}
-        slotMinTime="06:00:00"
-        slotMaxTime="22:00:00"
-        nowIndicator={true}
-        selectable={true}
-        editable={true}
-        eventResizableFromStart={true}
-        select={createEvent}
-        eventClick={setEditingEvent}
-        eventDrop={updateEventTime}
-        eventResize={updateEventTime}
-      />
+      <div className="fullcalendar">
+        <FullCalendar
+          height="auto"
+          events={eventsData}
+          plugins={[timeGridPlugin, interactionPlugin]}
+          allDaySlot={false}
+          slotMinTime="06:00:00"
+          slotMaxTime="22:00:00"
+          nowIndicator={true}
+          selectable={true}
+          editable={true}
+          eventResizableFromStart={true}
+          select={createEvent}
+          eventClick={setEditingEvent}
+          eventDrop={updateEventTime}
+          eventResize={updateEventTime}
+        />
+      </div>
       <Modal
         isOpen={editingEvent ? true : false}
         onAfterOpen={() => {
