@@ -14,3 +14,11 @@ html, body, #root {
 button {
   cursor: pointer;
 }
+
+.icon-button {
+  padding: 3px 3px 0 3px;
+}
+
+.flex-fill {
+  flex-grow: 1;
+}
