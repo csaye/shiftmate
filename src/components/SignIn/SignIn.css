@@ -1,0 +1,10 @@
+.SignIn {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.SignIn button {
+  padding: 10px;
+}
