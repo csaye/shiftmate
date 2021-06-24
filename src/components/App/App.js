@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Calendar from '../Calendar/Calendar.js';
+import Header from '../Header/Header.js';
 import SignIn from '../SignIn/SignIn.js';
 
 import firebase from 'firebase/app';
@@ -38,7 +39,10 @@ function App() {
     <div className="App">
       {
         firebase.auth().currentUser ?
-        <Calendar /> :
+        <>
+          <Header />
+          <Calendar />
+        </> :
         <SignIn />
       }
     </div>
