@@ -5,10 +5,28 @@ import logo from '../../img/logo.png';
 import google from '../../img/google.svg';
 
 function SignIn() {
+  // creates user doc
+  async function createUserDoc() {
+    // get user doc
+    const user = firebase.auth().currentUser;
+    const userDoc = firebase.firestore().collection('users').doc(user.uid);
+    const doc = await userDoc.get();
+    // if user doc does not exist, set data
+    if (!doc.exists) {
+      await userDoc.set({
+        name: user.displayName,
+        profile: user.photoURL,
+        admin: false,
+        joined: new Date()
+      });
+    }
+  }
+
   // opens google sign in popup
-  function signInWithGoogle() {
+  async function signInWithGoogle() {
     const provider = new firebase.auth.GoogleAuthProvider();
-    firebase.auth().signInWithPopup(provider);
+    await firebase.auth().signInWithPopup(provider);
+    createUserDoc();
   }
 
   return (

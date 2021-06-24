@@ -10,7 +10,7 @@ import { useCollectionData } from 'react-firebase-hooks/firestore';
 
 import './Calendar.css';
 
-function Calendar() {
+function Calendar(props) {
   const [editingEvent, setEditingEvent] = useState(null);
   const [title, setTitle] = useState('');
 
@@ -66,9 +66,9 @@ function Calendar() {
           slotMinTime="06:00:00"
           slotMaxTime="22:00:00"
           nowIndicator={true}
-          selectable={true}
-          editable={true}
-          eventResizableFromStart={true}
+          selectable={props.userData.admin}
+          editable={props.userData.admin}
+          eventResizableFromStart={props.userData.admin}
           select={createEvent}
           eventClick={setEditingEvent}
           eventDrop={updateEventTime}
