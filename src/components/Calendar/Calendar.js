@@ -11,7 +11,8 @@ import { useCollectionData } from 'react-firebase-hooks/firestore';
 import './Calendar.css';
 
 function Calendar(props) {
-  const [editingEvent, setEditingEvent] = useState(null);
+  const [currEvent, setCurrEvent] = useState(null);
+  const [currWorker, setCurrWorker] = useState('');
   const [title, setTitle] = useState('');
   const [worker, setWorker] = useState('');
 
@@ -41,13 +42,13 @@ function Calendar(props) {
   // deletes given event in firebase
   async function deleteEvent(eventInfo) {
     if (!window.confirm(`Delete ${eventInfo.event.title}?`)) return;
-    setEditingEvent(null);
+    setCurrEvent(null);
     await eventsCol.doc(eventInfo.event.id).delete();
   }
 
   // updates given event in firebase
   async function updateEvent(eventInfo) {
-    setEditingEvent(null);
+    setCurrEvent(null);
     await eventsCol.doc(eventInfo.event.id).update({ title, worker });
   }
 
@@ -65,10 +66,26 @@ function Calendar(props) {
 
   return (
     <div className="Calendar">
+      <p>Viewing schedule for</p>
+      <select
+        value={currWorker}
+        onChange={e => setCurrWorker(e.target.value)}
+      >
+        <option value="">All</option>
+        {
+          usersData.map(user =>
+            <option key={user.id} value={user.id}>
+              {user.name}
+            </option>
+          )
+        }
+      </select>
       <div className="fullcalendar">
         <FullCalendar
           height="auto"
-          events={eventsData}
+          events={
+            eventsData.filter(e => !currWorker || e.worker === currWorker)
+          }
           plugins={[timeGridPlugin, interactionPlugin]}
           allDaySlot={false}
           slotMinTime="06:00:00"
@@ -78,17 +95,18 @@ function Calendar(props) {
           editable={props.userData.admin}
           eventResizableFromStart={props.userData.admin}
           select={createEvent}
-          eventClick={setEditingEvent}
+          eventClick={setCurrEvent}
           eventDrop={updateEventTime}
           eventResize={updateEventTime}
         />
       </div>
       <Modal
-        isOpen={editingEvent ? true : false}
+        isOpen={currEvent ? true : false}
         onAfterOpen={() => {
-          setTitle(editingEvent?.event?.title);
+          setTitle(currEvent?.event?.title);
+          setWorker(currEvent?.event?.worker);
         }}
-        onRequestClose={() => setEditingEvent(null)}
+        onRequestClose={() => setCurrEvent(null)}
         ariaHideApp={false}
         style={{
           content: {
@@ -105,10 +123,10 @@ function Calendar(props) {
           }
         }}
       >
-        <h1>Editing {editingEvent?.event?.title}</h1>
+        <h1>Editing {currEvent?.event?.title}</h1>
         <form onSubmit={e => {
           e.preventDefault();
-          updateEvent(editingEvent);
+          updateEvent(currEvent);
         }}>
           <input
             placeholder="event title"
@@ -132,7 +150,7 @@ function Calendar(props) {
           <div>
             <button
               type="button"
-              onClick={() => setEditingEvent(null)}
+              onClick={() => setCurrEvent(null)}
             >
               Cancel
             </button>
@@ -141,7 +159,7 @@ function Calendar(props) {
         </form>
         <button
           className="icon-button"
-          onClick={() => deleteEvent(editingEvent)}
+          onClick={() => deleteEvent(currEvent)}
         >
           <DeleteIcon />
         </button>
