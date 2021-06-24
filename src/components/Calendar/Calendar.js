@@ -13,10 +13,19 @@ import './Calendar.css';
 function Calendar(props) {
   const [editingEvent, setEditingEvent] = useState(null);
   const [title, setTitle] = useState('');
+  const [worker, setWorker] = useState('');
 
   const uid = firebase.auth().currentUser.uid;
+
+  // get events
   const eventsCol = firebase.firestore().collection('events');
   const [eventsData] = useCollectionData(eventsCol, { idField: 'id' });
+
+  // get users
+  const usersCol = firebase.firestore().collection('users');
+  const [usersData] = useCollectionData(
+    usersCol.orderBy('name'), { idField: 'id' }
+  );
 
   // turns given selection into firebase event
   async function createEvent(selectInfo) {
@@ -24,7 +33,8 @@ function Calendar(props) {
       start: selectInfo.start.getTime(),
       end: selectInfo.end.getTime(),
       title: 'New Event',
-      creator: uid
+      creator: uid,
+      worker: ''
     });
   }
 
@@ -38,9 +48,7 @@ function Calendar(props) {
   // updates given event in firebase
   async function updateEvent(eventInfo) {
     setEditingEvent(null);
-    await eventsCol.doc(eventInfo.event.id).update({
-      title: title
-    });
+    await eventsCol.doc(eventInfo.event.id).update({ title, worker });
   }
 
   // updates given event in firebase
@@ -108,6 +116,19 @@ function Calendar(props) {
             onChange={e => setTitle(e.target.value)}
             required
           />
+          <select
+            value={worker}
+            onChange={e => setWorker(e.target.value)}
+          >
+            <option value="">None</option>
+            {
+              usersData.map(user =>
+                <option key={user.id} value={user.id}>
+                  {user.name}
+                </option>
+              )
+            }
+          </select>
           <div>
             <button
               type="button"
