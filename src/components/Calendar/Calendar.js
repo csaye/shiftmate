@@ -28,6 +28,18 @@ function Calendar() {
     await eventsCol.doc(eventInfo.event.id).delete();
   }
 
+  // updates given event in firebase
+  async function updateEvent(eventInfo) {
+    await eventsCol.doc(eventInfo.event.id).update({
+      start: eventInfo.event.start.getTime(),
+      end: eventInfo.event.end.getTime()
+    });
+  }
+
+  if (!eventsData) {
+    return <h1>Loading events...</h1>;
+  }
+
   return (
     <FullCalendar
       events={eventsData}
@@ -37,8 +49,12 @@ function Calendar() {
       slotMaxTime="22:00:00"
       nowIndicator={true}
       selectable={true}
+      editable={true}
+      eventResizableFromStart={true}
       select={createEvent}
       eventClick={deleteEvent}
+      eventDrop={updateEvent}
+      eventResize={updateEvent}
     />
   );
 }
