@@ -11,7 +11,10 @@ function SignIn() {
 
   return (
     <div className="SignIn">
-      <button onClick={signInWithGoogle}>Sign in with Google</button>
+      <div className="center-box">
+        <h1>Shiftmate</h1>
+        <button onClick={signInWithGoogle}>Sign in with Google</button>
+      </div>
     </div>
   );
 }

@@ -57,6 +57,7 @@ function Calendar() {
   return (
     <div className="Calendar">
       <FullCalendar
+        height="auto"
         events={eventsData}
         plugins={[timeGridPlugin, interactionPlugin]}
         allDaySlot={false}
