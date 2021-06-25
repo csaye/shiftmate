@@ -34,8 +34,11 @@ function Calendar(props) {
       start: selectInfo.start.getTime(),
       end: selectInfo.end.getTime(),
       title: 'New Event',
-      creator: uid,
-      worker: ''
+      extendedProps: {
+        creator: uid,
+        title: 'New Event',
+        worker: ''
+      }
     });
   }
 
@@ -49,7 +52,11 @@ function Calendar(props) {
   // updates given event in firebase
   async function updateEvent(eventInfo) {
     setCurrEvent(null);
-    await eventsCol.doc(eventInfo.event.id).update({ title, worker });
+    await eventsCol.doc(eventInfo.event.id).update({
+      title: worker ? `${getUserName(worker)} • ${title}` : title,
+      'extendedProps.title': title,
+      'extendedProps.worker': worker
+    });
   }
 
   // updates given event in firebase
@@ -58,6 +65,12 @@ function Calendar(props) {
       start: eventInfo.event.start.getTime(),
       end: eventInfo.event.end.getTime()
     });
+  }
+
+  // returns user name given user id
+  function getUserName(uid) {
+    const filtered = usersData.filter(user => user.id === uid);
+    return filtered.length ? filtered[0].name : null;
   }
 
   if (!eventsData) {
@@ -103,8 +116,8 @@ function Calendar(props) {
       <Modal
         isOpen={currEvent ? true : false}
         onAfterOpen={() => {
-          setTitle(currEvent?.event?.title);
-          setWorker(currEvent?.event?.worker);
+          setTitle(currEvent.event.extendedProps.title);
+          setWorker(currEvent.event.extendedProps.worker);
         }}
         onRequestClose={() => setCurrEvent(null)}
         ariaHideApp={false}
@@ -123,7 +136,7 @@ function Calendar(props) {
           }
         }}
       >
-        <h1>Editing {currEvent?.event?.title}</h1>
+        <h1>Editing {currEvent?.event.extendedProps.title}</h1>
         <form onSubmit={e => {
           e.preventDefault();
           updateEvent(currEvent);
