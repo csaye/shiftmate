@@ -15,6 +15,7 @@ function Calendar(props) {
   const [currWorker, setCurrWorker] = useState('');
   const [title, setTitle] = useState('');
   const [worker, setWorker] = useState('');
+  const [color, setColor] = useState('#3788d8');
 
   const uid = firebase.auth().currentUser.uid;
 
@@ -34,6 +35,7 @@ function Calendar(props) {
       start: selectInfo.start.getTime(),
       end: selectInfo.end.getTime(),
       title: 'New Event',
+      backgroundColor: '#3788d8',
       extendedProps: {
         creator: uid,
         title: 'New Event',
@@ -54,6 +56,7 @@ function Calendar(props) {
     setCurrEvent(null);
     await eventsCol.doc(eventInfo.event.id).update({
       title: worker ? `${getUserName(worker)} • ${title}` : title,
+      backgroundColor: color,
       'extendedProps.title': title,
       'extendedProps.worker': worker
     });
@@ -97,7 +100,9 @@ function Calendar(props) {
         <FullCalendar
           height="auto"
           events={
-            eventsData.filter(e => !currWorker || e.worker === currWorker)
+            eventsData.filter(e =>
+              !currWorker || e.extendedProps.worker === currWorker
+            )
           }
           plugins={[timeGridPlugin, interactionPlugin]}
           allDaySlot={false}
@@ -118,6 +123,7 @@ function Calendar(props) {
         onAfterOpen={() => {
           setTitle(currEvent.event.extendedProps.title);
           setWorker(currEvent.event.extendedProps.worker);
+          setColor(currEvent.event.backgroundColor);
         }}
         onRequestClose={() => setCurrEvent(null)}
         ariaHideApp={false}
@@ -160,6 +166,11 @@ function Calendar(props) {
               )
             }
           </select>
+          <input
+            type="color"
+            value={color}
+            onChange={e => setColor(e.target.value)}
+          />
           <div>
             <button
               type="button"
